@@ -42,25 +42,25 @@ function LogoIcon() {
 
 function SkeletonCard() {
   return (
-    <div className="skeleton-card">
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-        <div className="skeleton-line" style={{ width: '60%', height: '1.125rem' }} />
-        <div style={{ display: 'flex', gap: '0.375rem' }}>
-          <div className="skeleton-line" style={{ width: '2rem', height: '2rem', borderRadius: '6px' }} />
-          <div className="skeleton-line" style={{ width: '2rem', height: '2rem', borderRadius: '6px' }} />
+    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+      <div className="flex justify-between mb-5">
+        <div className="animate-pulse bg-slate-800 rounded h-5 w-3/5" />
+        <div className="flex gap-1.5">
+          <div className="animate-pulse bg-slate-800 rounded-md w-8 h-8" />
+          <div className="animate-pulse bg-slate-800 rounded-md w-8 h-8" />
         </div>
       </div>
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-        <div style={{ flex: 1 }}>
-          <div className="skeleton-line" style={{ width: '40%', height: '0.75rem', marginBottom: '0.5rem' }} />
-          <div className="skeleton-line" style={{ width: '70%', height: '1.25rem' }} />
+      <div className="flex gap-4 mb-4">
+        <div className="flex-1">
+          <div className="animate-pulse bg-slate-800 rounded h-3 w-2/5 mb-2" />
+          <div className="animate-pulse bg-slate-800 rounded h-6 w-3/4" />
         </div>
-        <div style={{ flex: 1 }}>
-          <div className="skeleton-line" style={{ width: '40%', height: '0.75rem', marginBottom: '0.5rem' }} />
-          <div className="skeleton-line" style={{ width: '70%', height: '1.25rem' }} />
+        <div className="flex-1">
+          <div className="animate-pulse bg-slate-800 rounded h-3 w-2/5 mb-2" />
+          <div className="animate-pulse bg-slate-800 rounded h-6 w-3/4" />
         </div>
       </div>
-      <div className="skeleton-line" style={{ width: '50%', height: '0.75rem' }} />
+      <div className="animate-pulse bg-slate-800 rounded h-3 w-1/2" />
     </div>
   );
 }
@@ -73,6 +73,19 @@ export default function HomePage() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
 
+  const addToast = useCallback((type: Toast['type'], message: string) => {
+    const id = Math.random().toString(36).slice(2);
+    setToasts((prev) => [...prev, { id, type, message }]);
+  }, []);
+
+  const dismissToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  const handleSuccess = useCallback((message: string) => addToast('success', message), [addToast]);
+
+  const handleError = useCallback((message: string) => addToast('error', message), [addToast]);
+
   const fetchProducts = useCallback(async () => {
     try {
       const res = await fetch('/api/products');
@@ -84,47 +97,54 @@ export default function HomePage() {
     } finally {
       setLoading(false);
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [addToast]);
 
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
-
-  const addToast = useCallback((type: Toast['type'], message: string) => {
-    const id = Math.random().toString(36).slice(2);
-    setToasts((prev) => [...prev, { id, type, message }]);
-  }, []);
-
-  const dismissToast = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  }, []);
-
-  const handleSuccess = useCallback(
-    (message: string) => addToast('success', message),
-    [addToast]
-  );
-
-  const handleError = useCallback(
-    (message: string) => addToast('error', message),
-    [addToast]
-  );
+    let ignore = false;
+    async function load() {
+      try {
+        const res = await fetch('/api/products');
+        if (!res.ok) throw new Error('Failed to fetch');
+        const data = await res.json();
+        if (!ignore) {
+          setProducts(data);
+        }
+      } catch {
+        if (!ignore) {
+          addToast('error', 'Failed to load products. Please refresh.');
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    }
+    load();
+    return () => {
+      ignore = true;
+    };
+  }, [addToast]);
 
   return (
-    <div className="app-container">
+    <div className="min-h-screen bg-slate-950">
       {/* Header */}
-      <header className="app-header">
-        <div className="app-header-inner">
-          <div className="app-logo">
-            <div className="app-logo-icon">
+      <header className="border-b border-slate-800 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
               <LogoIcon />
             </div>
             <div>
-              <div className="app-title">ProductManager</div>
-              <div className="app-subtitle">Playwright Playground</div>
+              <div className="text-xl font-bold tracking-tight text-slate-100 leading-none">
+                ProductManager
+              </div>
+              <div className="text-xs text-slate-400 font-normal mt-1 hidden sm:block">
+                Playwright Playground
+              </div>
             </div>
           </div>
           <button
-            className="btn btn-primary"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold cursor-pointer border-none bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/30 hover:-translate-y-0.5 active:translate-y-0 transition-all whitespace-nowrap"
             onClick={() => setShowAddModal(true)}
             data-testid="btn-add-product"
           >
@@ -135,34 +155,47 @@ export default function HomePage() {
       </header>
 
       {/* Main */}
-      <main className="main-content" id="main-content">
-        <div className="page-header">
+      <main className="max-w-6xl mx-auto px-6 py-8" id="main-content">
+        <div className="flex items-start justify-between gap-4 mb-8 flex-wrap">
           <div>
-            <h1 className="page-title">
-              Your <span>Products</span>
+            <h1 className="text-3xl font-extrabold tracking-tight">
+              Your{' '}
+              <span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
+                Products
+              </span>
             </h1>
-            <p className="product-count" data-testid="product-count">
-              {loading ? 'Loading...' : `${products.length} product${products.length !== 1 ? 's' : ''} total`}
+            <p className="text-sm text-slate-400 font-normal mt-1" data-testid="product-count">
+              {loading
+                ? 'Loading...'
+                : `${products.length} product${products.length !== 1 ? 's' : ''} total`}
             </p>
           </div>
         </div>
 
-        {/* Product List */}
+        {/* States */}
         {loading ? (
-          <div className="skeleton-grid" data-testid="loading-state">
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+            data-testid="loading-state"
+          >
             {[1, 2, 3].map((i) => (
               <SkeletonCard key={i} />
             ))}
           </div>
         ) : products.length === 0 ? (
-          <div className="empty-state" data-testid="empty-state">
-            <div className="empty-icon">
+          <div
+            className="text-center py-20 flex flex-col items-center gap-4"
+            data-testid="empty-state"
+          >
+            <div className="w-16 h-16 bg-indigo-500/10 rounded-full flex items-center justify-center text-indigo-400 mb-2">
               <BoxIcon />
             </div>
-            <h3>No products yet</h3>
-            <p>Add your first product to get started. It&apos;ll appear here right away.</p>
+            <h3 className="text-xl font-bold text-slate-100">No products yet</h3>
+            <p className="text-slate-400 text-sm max-w-xs">
+              Add your first product to get started. It&apos;ll appear here right away.
+            </p>
             <button
-              className="btn btn-primary"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold cursor-pointer border-none bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/30 hover:-translate-y-0.5 active:translate-y-0 transition-all"
               onClick={() => setShowAddModal(true)}
               data-testid="btn-add-first"
             >
@@ -171,7 +204,10 @@ export default function HomePage() {
             </button>
           </div>
         ) : (
-          <div className="product-grid" data-testid="product-list">
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+            data-testid="product-list"
+          >
             {products.map((product) => (
               <ProductCard
                 key={product.id}

@@ -25,7 +25,7 @@ interface FormErrors {
 
 function XIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
       <path
         d="M5 5l10 10M15 5L5 15"
         stroke="currentColor"
@@ -35,6 +35,10 @@ function XIcon() {
     </svg>
   );
 }
+
+const inputBase =
+  'w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-slate-100 outline-none transition-all placeholder:text-slate-500 hover:border-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20';
+const inputError = 'border-red-500 focus:border-red-500 focus:ring-red-500/20';
 
 export default function ProductFormModal({
   product,
@@ -53,7 +57,6 @@ export default function ProductFormModal({
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
 
-  // Focus trap — close on Escape
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -116,19 +119,25 @@ export default function ProductFormModal({
 
   return (
     <div
-      className="modal-backdrop"
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all"
       data-testid="product-form-modal"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <div className="modal-header">
-          <h2 id="modal-title" className="modal-title">
+      <div
+        className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 w-full max-w-md shadow-2xl shadow-black/80 transition-all"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <h2 id="modal-title" className="text-xl font-bold tracking-tight text-slate-100">
             {isEditing ? 'Edit Product' : 'Add New Product'}
           </h2>
           <button
-            className="modal-close"
+            className="text-slate-400 hover:text-slate-100 transition-colors p-1 rounded-md bg-transparent border-none cursor-pointer flex items-center"
             onClick={onClose}
             aria-label="Close modal"
             data-testid="modal-close"
@@ -137,16 +146,25 @@ export default function ProductFormModal({
           </button>
         </div>
 
-        <form className="form" onSubmit={handleSubmit} noValidate data-testid="product-form">
-          <div className="form-group">
-            <label className="form-label" htmlFor="product-title">
+        <form
+          className="flex flex-col gap-5"
+          onSubmit={handleSubmit}
+          noValidate
+          data-testid="product-form"
+        >
+          {/* Title */}
+          <div className="flex flex-col gap-1.5">
+            <label
+              className="text-xs font-semibold text-slate-300 uppercase tracking-wider"
+              htmlFor="product-title"
+            >
               Product Title
             </label>
             <input
               id="product-title"
               type="text"
-              className={`form-input${errors.title ? ' error' : ''}`}
-              placeholder="e.g. MacBook Pro 14&quot;"
+              className={`${inputBase} ${errors.title ? inputError : ''}`}
+              placeholder='e.g. MacBook Pro 14"'
               value={form.title}
               onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
               data-testid="input-title"
@@ -154,21 +172,25 @@ export default function ProductFormModal({
               autoComplete="off"
             />
             {errors.title && (
-              <span className="form-error" role="alert" data-testid="error-title">
+              <span className="text-xs text-red-400" role="alert" data-testid="error-title">
                 {errors.title}
               </span>
             )}
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label className="form-label" htmlFor="product-price">
+          {/* Price + Quantity row */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <label
+                className="text-xs font-semibold text-slate-300 uppercase tracking-wider"
+                htmlFor="product-price"
+              >
                 Price ($)
               </label>
               <input
                 id="product-price"
                 type="number"
-                className={`form-input${errors.price ? ' error' : ''}`}
+                className={`${inputBase} ${errors.price ? inputError : ''}`}
                 placeholder="0.00"
                 min="0"
                 step="0.01"
@@ -177,20 +199,23 @@ export default function ProductFormModal({
                 data-testid="input-price"
               />
               {errors.price && (
-                <span className="form-error" role="alert" data-testid="error-price">
+                <span className="text-xs text-red-400" role="alert" data-testid="error-price">
                   {errors.price}
                 </span>
               )}
             </div>
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="product-quantity">
+            <div className="flex flex-col gap-1.5">
+              <label
+                className="text-xs font-semibold text-slate-300 uppercase tracking-wider"
+                htmlFor="product-quantity"
+              >
                 Quantity
               </label>
               <input
                 id="product-quantity"
                 type="number"
-                className={`form-input${errors.quantity ? ' error' : ''}`}
+                className={`${inputBase} ${errors.quantity ? inputError : ''}`}
                 placeholder="0"
                 min="0"
                 step="1"
@@ -199,17 +224,18 @@ export default function ProductFormModal({
                 data-testid="input-quantity"
               />
               {errors.quantity && (
-                <span className="form-error" role="alert" data-testid="error-quantity">
+                <span className="text-xs text-red-400" role="alert" data-testid="error-quantity">
                   {errors.quantity}
                 </span>
               )}
             </div>
           </div>
 
-          <div className="form-actions">
+          {/* Actions */}
+          <div className="flex gap-3 mt-2">
             <button
               type="button"
-              className="btn btn-ghost"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold cursor-pointer border border-slate-700 bg-transparent text-slate-300 hover:bg-slate-800 hover:text-slate-100 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={onClose}
               data-testid="btn-cancel"
             >
@@ -217,13 +243,13 @@ export default function ProductFormModal({
             </button>
             <button
               type="submit"
-              className="btn btn-primary"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold cursor-pointer border-none bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/30 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={submitting}
               data-testid="btn-submit"
             >
               {submitting ? (
-                <span className="loading-spinner">
-                  <span className="spinner" />
+                <span className="flex items-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                   {isEditing ? 'Updating...' : 'Adding...'}
                 </span>
               ) : isEditing ? (

@@ -15,10 +15,7 @@ export async function PUT(request: Request, context: RouteContext) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
     }
     if (body.price === undefined || body.price < 0) {
-      return NextResponse.json(
-        { error: 'Price must be a non-negative number' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Price must be a non-negative number' }, { status: 400 });
     }
     if (body.quantity === undefined || body.quantity < 0) {
       return NextResponse.json(

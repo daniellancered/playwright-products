@@ -55,17 +55,20 @@ export default function ProductCard({ product, onEdit, onDelete }: ProductCardPr
 
   return (
     <article
-      className="product-card"
+      className="relative overflow-hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-700 hover:shadow-xl hover:shadow-indigo-500/5 group"
       data-testid="product-card"
       data-product-id={product.id}
     >
-      <div className="product-card-header">
-        <h3 className="product-title" data-testid="product-title">
+      <div className="flex items-start justify-between gap-3 mb-5">
+        <h3
+          className="text-base font-semibold text-slate-100 leading-snug break-words"
+          data-testid="product-title"
+        >
           {product.title}
         </h3>
-        <div className="product-actions">
+        <div className="flex gap-1.5 shrink-0">
           <button
-            className="btn btn-icon product-edit-btn"
+            className="p-2 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 hover:border-indigo-500/40 transition-all cursor-pointer"
             onClick={() => onEdit(product)}
             aria-label={`Edit ${product.title}`}
             data-testid="btn-edit"
@@ -74,7 +77,7 @@ export default function ProductCard({ product, onEdit, onDelete }: ProductCardPr
             <EditIcon />
           </button>
           <button
-            className="btn btn-icon product-delete-btn"
+            className="p-2 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 hover:border-red-500/40 transition-all cursor-pointer"
             onClick={() => onDelete(product)}
             aria-label={`Delete ${product.title}`}
             data-testid="btn-delete"
@@ -85,17 +88,21 @@ export default function ProductCard({ product, onEdit, onDelete }: ProductCardPr
         </div>
       </div>
 
-      <div className="product-stats">
-        <div className="product-stat">
-          <div className="product-stat-label">Price</div>
-          <div className="product-stat-value price" data-testid="product-price">
+      <div className="flex gap-4">
+        <div className="flex-1 bg-slate-950/60 border border-slate-800/80 rounded-lg px-3.5 py-2.5">
+          <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">
+            Price
+          </div>
+          <div className="text-base font-bold text-indigo-400" data-testid="product-price">
             {formatPrice(product.price)}
           </div>
         </div>
-        <div className="product-stat">
-          <div className="product-stat-label">Stock</div>
+        <div className="flex-1 bg-slate-950/60 border border-slate-800/80 rounded-lg px-3.5 py-2.5">
+          <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">
+            Stock
+          </div>
           <div
-            className={`product-stat-value ${isLowStock ? 'qty-low' : 'qty-good'}`}
+            className={`text-base font-bold ${isLowStock ? 'text-amber-400' : 'text-emerald-400'}`}
             data-testid="product-quantity"
           >
             {product.quantity} units
@@ -103,7 +110,7 @@ export default function ProductCard({ product, onEdit, onDelete }: ProductCardPr
         </div>
       </div>
 
-      <p className="product-date" data-testid="product-updated">
+      <p className="text-xs text-slate-500 mt-4" data-testid="product-updated">
         Updated {formatDate(product.updatedAt)}
       </p>
     </article>

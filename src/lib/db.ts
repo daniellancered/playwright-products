@@ -41,10 +41,7 @@ export async function createProduct(input: ProductInput): Promise<Product> {
   return product;
 }
 
-export async function updateProduct(
-  id: string,
-  input: ProductInput
-): Promise<Product | null> {
+export async function updateProduct(id: string, input: ProductInput): Promise<Product | null> {
   const products = await readProducts();
   const index = products.findIndex((p) => p.id === id);
   if (index === -1) return null;

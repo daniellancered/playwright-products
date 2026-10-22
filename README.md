@@ -30,41 +30,41 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ## 📡 API Routes
 
-| Method   | Route                    | Description        |
-| -------- | ------------------------ | ------------------ |
-| `GET`    | `/api/products`          | List all products  |
-| `POST`   | `/api/products`          | Create a product   |
-| `PUT`    | `/api/products/:id`      | Update a product   |
-| `DELETE` | `/api/products/:id`      | Delete a product   |
+| Method   | Route               | Description       |
+| -------- | ------------------- | ----------------- |
+| `GET`    | `/api/products`     | List all products |
+| `POST`   | `/api/products`     | Create a product  |
+| `PUT`    | `/api/products/:id` | Update a product  |
+| `DELETE` | `/api/products/:id` | Delete a product  |
 
 ## 🎭 Playwright Testing
 
 Key `data-testid` selectors available:
 
-| Selector                 | Element                      |
-| ------------------------ | ---------------------------- |
-| `btn-add-product`        | Header "Add Product" button  |
-| `product-list`           | Product grid container       |
-| `product-card`           | Individual product card      |
-| `product-title`          | Product title text           |
-| `product-price`          | Product price text           |
-| `product-quantity`       | Product quantity text        |
-| `btn-edit`               | Edit button on card          |
-| `btn-delete`             | Delete button on card        |
-| `product-form-modal`     | Add/edit modal backdrop      |
-| `product-form`           | The form element             |
-| `input-title`            | Title input                  |
-| `input-price`            | Price input                  |
-| `input-quantity`         | Quantity input               |
-| `btn-submit`             | Form submit button           |
-| `btn-cancel`             | Form cancel button           |
-| `delete-confirm-modal`   | Delete confirmation modal    |
-| `btn-confirm-delete`     | Confirm delete button        |
-| `btn-cancel-delete`      | Cancel delete button         |
-| `toast-container`        | Toast notifications area     |
-| `toast-success`          | Success toast                |
-| `toast-error`            | Error toast                  |
-| `empty-state`            | Empty state (no products)    |
+| Selector               | Element                     |
+| ---------------------- | --------------------------- |
+| `btn-add-product`      | Header "Add Product" button |
+| `product-list`         | Product grid container      |
+| `product-card`         | Individual product card     |
+| `product-title`        | Product title text          |
+| `product-price`        | Product price text          |
+| `product-quantity`     | Product quantity text       |
+| `btn-edit`             | Edit button on card         |
+| `btn-delete`           | Delete button on card       |
+| `product-form-modal`   | Add/edit modal backdrop     |
+| `product-form`         | The form element            |
+| `input-title`          | Title input                 |
+| `input-price`          | Price input                 |
+| `input-quantity`       | Quantity input              |
+| `btn-submit`           | Form submit button          |
+| `btn-cancel`           | Form cancel button          |
+| `delete-confirm-modal` | Delete confirmation modal   |
+| `btn-confirm-delete`   | Confirm delete button       |
+| `btn-cancel-delete`    | Cancel delete button        |
+| `toast-container`      | Toast notifications area    |
+| `toast-success`        | Success toast               |
+| `toast-error`          | Error toast                 |
+| `empty-state`          | Empty state (no products)   |
 
 ## 📝 Scripts
 

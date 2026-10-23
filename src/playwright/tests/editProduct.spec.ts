@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import ProductPage from '@/playwright/pages/productPage';
 
-test('Edit Product', async ({ page }) => {
+test('Edit Existing Product', async ({ page }) => {
   const productPage = new ProductPage(page);
 
   const originalproduct = `product 1`;
@@ -19,6 +19,7 @@ test('Edit Product', async ({ page }) => {
 
   // Verify the edited product's details and success notification.
   await productPage.expectProductDetails(updatedproduct);
+  await expect(productPage.successToast).toBeVisible();
 
   // Verify the old product title no longer exists.
   await expect(productPage.productCard(originalproduct)).toHaveCount(0);

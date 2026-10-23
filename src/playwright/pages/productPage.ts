@@ -1,4 +1,4 @@
-import type { Locator, Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 interface ProductFormValues {
   title: string;
@@ -28,7 +28,7 @@ export default class ProductPage {
   }
 
   async goto() {
-    await this.page.goto('');
+    await this.page.goto('/');
   }
 
   async openAddProductForm() {
@@ -56,5 +56,20 @@ export default class ProductPage {
 
   productQuantity(title: string): Locator {
     return this.productCard(title).getByTestId('product-quantity');
+  }
+
+  // Add product workflow
+  async addProduct(data: ProductFormValues): Promise<void> {
+    await this.openAddProductForm();
+    await expect(this.productFormModal).toBeVisible();
+    await this.fillProductForm(data);
+    await this.submitProductForm();
+  }
+
+  // Verify the product card, price, and quantity.
+  async expectProductDetails({ title, price, quantity }: ProductFormValues): Promise<void> {
+    await expect(this.productCard(title)).toBeVisible();
+    await expect(this.productPrice(title)).toHaveText(`$${price.toFixed(2)}`);
+    await expect(this.productQuantity(title)).toHaveText(`${quantity} units`);
   }
 }

@@ -8,7 +8,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     launchOptions: {
-      slowMo: 1500,
+      slowMo: 1800,
     },
   },
 

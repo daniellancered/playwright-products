@@ -9,6 +9,7 @@ interface ProductFormValues {
 export default class ProductPage {
   readonly page: Page;
   readonly addProductButton: Locator;
+  readonly editProductButton: Locator;
   readonly productFormModal: Locator;
   readonly titleInput: Locator;
   readonly priceInput: Locator;
@@ -19,6 +20,7 @@ export default class ProductPage {
   constructor(page: Page) {
     this.page = page;
     this.addProductButton = page.getByTestId('btn-add-product');
+    this.editProductButton = page.getByTestId('btn-edit');
     this.productFormModal = page.getByTestId('product-form-modal');
     this.titleInput = page.getByTestId('input-title');
     this.priceInput = page.getByTestId('input-price');
@@ -71,5 +73,16 @@ export default class ProductPage {
     await expect(this.productCard(title)).toBeVisible();
     await expect(this.productPrice(title)).toHaveText(`$${price.toFixed(2)}`);
     await expect(this.productQuantity(title)).toHaveText(`${quantity} units`);
+  }
+
+  // Edit product workflow
+  async openEditProductForm(title: string): Promise<void> {
+    await this.productCard(title).getByTestId('btn-edit').click();
+  }
+
+  async editProduct(currentTitle: string, updatedData: ProductFormValues): Promise<void> {
+    await this.openEditProductForm(currentTitle);
+    await this.fillProductForm(updatedData);
+    await this.submitProductForm();
   }
 }

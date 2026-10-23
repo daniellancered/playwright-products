@@ -5,13 +5,14 @@ test('Add Product', async ({ page }) => {
   const productPage = new ProductPage(page);
 
   const productData = {
-    title: `Product z ${Date.now()}`,
-    price: 20,
-    quantity: 1,
+    title: `Product lance`,
+    price: 44,
+    quantity: 3,
   };
 
-  // Add product.
   await productPage.goto();
+
+  // Add product.
   await productPage.addProduct(productData);
 
   // Verify the created product's details and success notification.

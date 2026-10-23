@@ -106,4 +106,9 @@ export default class ProductPage {
     await expect(this.deleteConfirmModal).toBeVisible();
     await this.confirmDeleteButton.click();
   }
+
+  // Count the displayed product cards.
+  async getProductCount(): Promise<number> {
+    return await this.page.getByTestId('product-card').count();
+  }
 }

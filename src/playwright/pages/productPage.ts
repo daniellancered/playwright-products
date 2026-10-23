@@ -9,6 +9,7 @@ interface ProductFormValues {
 export default class ProductPage {
   readonly page: Page;
   readonly addProductButton: Locator;
+  readonly firstAddButton: Locator;
   readonly editProductButton: Locator;
   readonly productFormModal: Locator;
   readonly deleteProductButton: Locator;
@@ -23,6 +24,7 @@ export default class ProductPage {
   constructor(page: Page) {
     this.page = page;
     this.addProductButton = page.getByTestId('btn-add-product');
+    this.firstAddButton = page.getByTestId('btn-add-first');
     this.editProductButton = page.getByTestId('btn-edit');
     this.productFormModal = page.getByTestId('product-form-modal');
     this.deleteProductButton = page.getByTestId('btn-delete');
@@ -39,8 +41,12 @@ export default class ProductPage {
     await this.page.goto('/');
   }
 
-  async openAddProductForm() {
-    await this.addProductButton.click();
+  async openAddProductForm(): Promise<void> {
+    if (await this.firstAddButton.isVisible()) {
+      await this.firstAddButton.click();
+    } else {
+      await this.addProductButton.click();
+    }
   }
 
   async fillProductForm({ title, price, quantity }: ProductFormValues): Promise<void> {

@@ -5,8 +5,8 @@ test('Add Product', async ({ page }) => {
   const productPage = new ProductPage(page);
 
   const productData = {
-    title: `Product lance`,
-    price: 44,
+    title: `Product zie`,
+    price: 443,
     quantity: 3,
   };
 

@@ -11,6 +11,9 @@ export default class ProductPage {
   readonly addProductButton: Locator;
   readonly editProductButton: Locator;
   readonly productFormModal: Locator;
+  readonly deleteProductButton: Locator;
+  readonly deleteConfirmModal: Locator;
+  readonly confirmDeleteButton: Locator;
   readonly titleInput: Locator;
   readonly priceInput: Locator;
   readonly quantityInput: Locator;
@@ -22,6 +25,9 @@ export default class ProductPage {
     this.addProductButton = page.getByTestId('btn-add-product');
     this.editProductButton = page.getByTestId('btn-edit');
     this.productFormModal = page.getByTestId('product-form-modal');
+    this.deleteProductButton = page.getByTestId('btn-delete');
+    this.deleteConfirmModal = page.getByTestId('delete-confirm-modal');
+    this.confirmDeleteButton = page.getByTestId('btn-confirm-delete');
     this.titleInput = page.getByTestId('input-title');
     this.priceInput = page.getByTestId('input-price');
     this.quantityInput = page.getByTestId('input-quantity');
@@ -49,7 +55,9 @@ export default class ProductPage {
 
   // Locate a specific product and its displayed details.
   productCard(title: string): Locator {
-    return this.page.getByTestId('product-card').filter({ hasText: title });
+    return this.page.getByTestId('product-card').filter({
+      has: this.page.getByTestId('product-title').getByText(title, { exact: true }),
+    });
   }
 
   productPrice(title: string): Locator {
@@ -84,5 +92,12 @@ export default class ProductPage {
     await this.openEditProductForm(currentTitle);
     await this.fillProductForm(updatedData);
     await this.submitProductForm();
+  }
+
+  // Delete product workflow
+  async deleteProduct(title: string): Promise<void> {
+    await this.productCard(title).getByTestId('btn-delete').click();
+    await expect(this.deleteConfirmModal).toBeVisible();
+    await this.confirmDeleteButton.click();
   }
 }

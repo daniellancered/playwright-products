@@ -20,6 +20,9 @@ export default class ProductPage {
   readonly quantityInput: Locator;
   readonly submitButton: Locator;
   readonly successToast: Locator;
+  readonly titleError: Locator;
+  readonly priceError: Locator;
+  readonly quantityError: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -35,6 +38,9 @@ export default class ProductPage {
     this.quantityInput = page.getByTestId('input-quantity');
     this.submitButton = page.getByTestId('btn-submit');
     this.successToast = page.getByTestId('toast-success');
+    this.titleError = page.getByTestId('error-title');
+    this.priceError = page.getByTestId('error-price');
+    this.quantityError = page.getByTestId('error-quantity');
   }
 
   async goto() {
@@ -76,10 +82,12 @@ export default class ProductPage {
 
   // Add product workflow
   async addProduct(data: ProductFormValues): Promise<void> {
+    const initialCount = await this.getProductCount();
     await this.openAddProductForm();
     await expect(this.productFormModal).toBeVisible();
     await this.fillProductForm(data);
     await this.submitProductForm();
+    await expect.poll(() => this.getProductCount()).toBe(initialCount + 1);
   }
 
   // Verify the product card, price, and quantity.
@@ -102,13 +110,20 @@ export default class ProductPage {
 
   // Delete product workflow
   async deleteProduct(title: string): Promise<void> {
+    const initialCount = await this.getProductCount();
     await this.productCard(title).getByTestId('btn-delete').click();
     await expect(this.deleteConfirmModal).toBeVisible();
     await this.confirmDeleteButton.click();
+    await expect.poll(() => this.getProductCount()).toBe(initialCount - 1);
   }
 
   // Count the displayed product cards.
   async getProductCount(): Promise<number> {
     return await this.page.getByTestId('product-card').count();
+  }
+
+  // Verify Success toast notification is visible.
+  async expectSuccessToast(): Promise<void> {
+    await expect(this.successToast).toBeVisible();
   }
 }

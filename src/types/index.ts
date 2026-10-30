@@ -1,11 +1,11 @@
-export interface Product {
-  id: string;
+export type Product = {
+  id?: string;
   title: string;
   price: number;
   quantity: number;
-  createdAt: string;
-  updatedAt: string;
-}
+  createdAt?: string;
+  updatedAt?: string;
+};
 
 export type ProductInput = Pick<Product, 'title' | 'price' | 'quantity'>;
 
@@ -16,3 +16,10 @@ export interface Toast {
   type: ToastType;
   message: string;
 }
+
+export type ProductValidationCase = {
+  name: string;
+  product: Product;
+  error: string;
+  errorLocator: 'titleError' | 'priceError' | 'quantityError';
+};

@@ -1,12 +1,15 @@
 import { test as base } from '@playwright/test';
 import ProductPage from '@/playwright/pages/productPage';
+import { createValidProductData } from '@/playwright/test-data/productData';
+import { Product } from '@/types';
 
 type ProductFixtures = {
   productPage: ProductPage;
-  existingProduct: { title: string; price: number; quantity: number };
+  createExistingProduct: Product;
 };
 
 export const test = base.extend<ProductFixtures>({
+  // Fixture to interact with the ProductPage class.
   productPage: async ({ page }, use) => {
     const productPage = new ProductPage(page);
 
@@ -14,18 +17,9 @@ export const test = base.extend<ProductFixtures>({
     await use(productPage);
   },
 
-  existingProduct: async ({ productPage }, use) => {
-    const product = {
-      title: `Test Product for existing`,
-      price: 19.99,
-      quantity: 1,
-    };
-
-    await productPage.goto();
-    await productPage.openAddProductForm();
-    await productPage.fillProductForm(product);
-    await productPage.submitProductForm();
-
+  createExistingProduct: async ({ productPage }, use) => {
+    const product = createValidProductData();
+    await productPage.addProduct(product);
     await use(product);
   },
 });

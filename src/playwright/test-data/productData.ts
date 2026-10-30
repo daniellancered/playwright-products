@@ -1,24 +1,13 @@
-export type ProductData = {
-  title: string;
-  price: number;
-  quantity: number;
-};
+import { Product, ProductValidationCase } from '@/types';
 
-const baseProduct: ProductData = {
-  title: 'Validate Product',
-  price: 100,
+const baseProduct: Product = {
+  title: `Product ${Date.now()}`,
+  price: 100.0,
   quantity: 10,
 };
 
-export type ProductValidationCase = {
-  name: string;
-  product: ProductData;
-  error: string;
-  errorLocator: 'titleError' | 'priceError' | 'quantityError';
-};
-
-export function createValidProductData(): ProductData {
-  return { ...baseProduct, title: `Product ${Date.now()}` };
+export function createValidProductData(): Product {
+  return baseProduct;
 }
 
 export function createInvalidProductData(): ProductValidationCase[] {

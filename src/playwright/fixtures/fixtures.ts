@@ -1,11 +1,11 @@
 import { test as base } from '@playwright/test';
 import ProductPage from '@/playwright/pages/productPage';
-import { createValidProductData } from '@/playwright/test-data/productData';
+import { createValidProduct } from '@/playwright/test-data/productData';
 import { Product } from '@/types';
 
 type ProductFixtures = {
   productPage: ProductPage;
-  createExistingProduct: Product;
+  existingProduct: Product;
 };
 
 export const test = base.extend<ProductFixtures>({
@@ -16,9 +16,9 @@ export const test = base.extend<ProductFixtures>({
     await productPage.goto();
     await use(productPage);
   },
-
-  createExistingProduct: async ({ productPage }, use) => {
-    const product = createValidProductData();
+  // Fixture to create an existing product for tests that require it.
+  existingProduct: async ({ productPage }, use) => {
+    const product = createValidProduct();
     await productPage.addProduct(product);
     await use(product);
   },

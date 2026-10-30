@@ -1,8 +1,8 @@
 import { expect, test } from '@/playwright/fixtures/fixtures';
-import { createInvalidProductData } from '../test-data/productData';
+import { getInvalidProductValidationCases } from '../test-data/productData';
 
 // using product data with invalid values to test product form validation
-const invalidCases = createInvalidProductData();
+const invalidCases = getInvalidProductValidationCases();
 
 test.describe('Add product form validation', () => {
   test.beforeEach(async ({ productPage }) => {

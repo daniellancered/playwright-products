@@ -1,19 +1,19 @@
 import { expect, test } from '../fixtures/fixtures';
-import { createValidProductData } from '../test-data/productData';
+import { createValidProduct } from '../test-data/productData';
 
 test('Add Product', async ({ productPage }) => {
-  const productData = createValidProductData();
+  const productDetails = createValidProduct();
 
   // Add product.
-  await productPage.addProduct(productData);
+  await productPage.addProduct(productDetails);
 
   // Verify the created product's details and success notification.
-  await expect(productPage.productCard(productData.title)).toBeVisible();
-  await expect(productPage.productPrice(productData.title)).toHaveText(
-    `$${productData.price.toFixed(2)}`
+  await expect(productPage.productCard(productDetails.title)).toBeVisible();
+  await expect(productPage.productPrice(productDetails.title)).toHaveText(
+    `$${productDetails.price.toFixed(2)}`
   );
-  await expect(productPage.productQuantity(productData.title)).toHaveText(
-    `${productData.quantity} units`
+  await expect(productPage.productQuantity(productDetails.title)).toHaveText(
+    `${productDetails.quantity} units`
   );
   await expect(productPage.successToast).toBeVisible();
 });

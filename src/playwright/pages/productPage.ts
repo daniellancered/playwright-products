@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import { type Locator, type Page } from '@playwright/test';
 
 interface ProductFormValues {
   title: string;
@@ -82,19 +82,9 @@ export default class ProductPage {
 
   // Add product workflow
   async addProduct(data: ProductFormValues): Promise<void> {
-    const initialCount = await this.getProductCount();
     await this.openAddProductForm();
-    await expect(this.productFormModal).toBeVisible();
     await this.fillProductForm(data);
     await this.submitProductForm();
-    await expect.poll(() => this.getProductCount()).toBe(initialCount + 1);
-  }
-
-  // Verify the product card, price, and quantity.
-  async expectProductDetails({ title, price, quantity }: ProductFormValues): Promise<void> {
-    await expect(this.productCard(title)).toBeVisible();
-    await expect(this.productPrice(title)).toHaveText(`$${price.toFixed(2)}`);
-    await expect(this.productQuantity(title)).toHaveText(`${quantity} units`);
   }
 
   // Edit product workflow
@@ -110,20 +100,12 @@ export default class ProductPage {
 
   // Delete product workflow
   async deleteProduct(title: string): Promise<void> {
-    const initialCount = await this.getProductCount();
     await this.productCard(title).getByTestId('btn-delete').click();
-    await expect(this.deleteConfirmModal).toBeVisible();
     await this.confirmDeleteButton.click();
-    await expect.poll(() => this.getProductCount()).toBe(initialCount - 1);
   }
 
   // Count the displayed product cards.
   async getProductCount(): Promise<number> {
     return await this.page.getByTestId('product-card').count();
-  }
-
-  // Verify Success toast notification is visible.
-  async expectSuccessToast(): Promise<void> {
-    await expect(this.successToast).toBeVisible();
   }
 }

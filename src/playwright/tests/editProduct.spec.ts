@@ -1,26 +1,22 @@
-import { expect, test } from '@playwright/test';
-import ProductPage from '@/playwright/pages/productPage';
+import { expect, test } from '../fixtures/fixtures';
 
-test('Edit Existing Product', async ({ page }) => {
-  const productPage = new ProductPage(page);
-
-  const originalproduct = `product 1`;
-
-  const updatedproduct = {
-    title: `edited now ${Date.now()}`,
-    price: 145,
-    quantity: 50,
-  };
-
-  await productPage.goto();
+test('Edit Existing Product Title', async ({ productPage, existingProduct }) => {
+  const id = Date.now();
+  const updatedProduct = { ...existingProduct, title: `edited now ${id}` };
 
   // Edit existing product.
-  await productPage.editProduct(originalproduct, updatedproduct);
+  await productPage.editProduct(existingProduct.title, updatedProduct);
 
   // Verify the edited product's details and success notification.
-  await productPage.expectProductDetails(updatedproduct);
+  await expect(productPage.productCard(updatedProduct.title)).toBeVisible();
+  await expect(productPage.productPrice(updatedProduct.title)).toHaveText(
+    `$${updatedProduct.price.toFixed(2)}`
+  );
+  await expect(productPage.productQuantity(updatedProduct.title)).toHaveText(
+    `${updatedProduct.quantity} units`
+  );
   await expect(productPage.successToast).toBeVisible();
 
   // Verify the old product title no longer exists.
-  await expect(productPage.productCard(originalproduct)).toHaveCount(0);
+  await expect(productPage.productCard(existingProduct.title)).toHaveCount(0);
 });

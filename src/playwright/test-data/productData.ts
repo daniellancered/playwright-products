@@ -6,6 +6,12 @@ const validProductTemplate: Product = {
   quantity: 10,
 };
 
+export const updatedProductTemplate: Product = {
+  title: `Updated Product ${Date.now()}`,
+  price: 200.0,
+  quantity: 20,
+};
+
 export function createValidProduct(): Product {
   return validProductTemplate;
 }

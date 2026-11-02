@@ -1,4 +1,5 @@
 import { type Locator, type Page } from '@playwright/test';
+import { Product } from '@/types';
 
 interface ProductFormValues {
   title: string;
@@ -92,7 +93,7 @@ export default class ProductPage {
     await this.productCard(title).getByTestId('btn-edit').click();
   }
 
-  async editProduct(currentTitle: string, updatedData: ProductFormValues): Promise<void> {
+  async editProduct(currentTitle: string, updatedData: Product): Promise<void> {
     await this.openEditProductForm(currentTitle);
     await this.fillProductForm(updatedData);
     await this.submitProductForm();

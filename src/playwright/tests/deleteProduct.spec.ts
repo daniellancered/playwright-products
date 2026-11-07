@@ -1,19 +1,14 @@
-import { expect, test } from '@playwright/test';
-import ProductPage from '@/playwright/pages/productPage';
+import { expect, test } from '@/playwright/fixtures/fixtures';
 
-test('Delete Product', async ({ page }) => {
-  const productPage = new ProductPage(page);
-
-  const productTitle = 'Playwright Product z 1792719519071';
-
-  await productPage.goto();
+test('Delete Product', async ({ productPage, existingProduct }) => {
+  const productDetails = existingProduct;
 
   // Verify the existing product is visible.
-  await expect(productPage.productCard(productTitle)).toBeVisible();
+  await expect(productPage.productCard(productDetails.title)).toBeVisible();
 
   // Delete the product.
-  await productPage.deleteProduct(productTitle);
+  await productPage.deleteProduct(productDetails.title);
 
   // Verify the product no longer exists.
-  await expect(productPage.productCard(productTitle)).toHaveCount(0);
+  await expect(productPage.productCard(productDetails.title)).toHaveCount(0);
 });

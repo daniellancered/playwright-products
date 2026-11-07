@@ -24,6 +24,33 @@ export function getInvalidProductValidationCases(): ProductValidationCase[] {
       error: 'Title is required',
       errorLocator: 'titleError',
     },
+
+    {
+      name: 'requires a price',
+      product: { ...validProductTemplate, price: null as unknown as number },
+      error: 'Price is required',
+      errorLocator: 'priceError',
+    },
+
+    {
+      name: 'requires a quantity',
+      product: { ...validProductTemplate, quantity: null as unknown as number },
+      error: 'Quantity is required',
+      errorLocator: 'quantityError',
+    },
+
+    {
+      name: 'requires all fields',
+      product: {
+        ...validProductTemplate,
+        title: '',
+        price: null as unknown as number,
+        quantity: null as unknown as number,
+      },
+      error: 'All fields are required',
+      errorLocator: 'titleError',
+    },
+
     {
       name: 'rejects a negative price',
       product: { ...validProductTemplate, price: -1 },
@@ -35,6 +62,18 @@ export function getInvalidProductValidationCases(): ProductValidationCase[] {
       product: { ...validProductTemplate, quantity: -1 },
       error: 'Quantity must be a valid non-negative integer',
       errorLocator: 'quantityError',
+    },
+    {
+      name: 'rejects a fractional quantity',
+      product: { ...validProductTemplate, quantity: 1.5 },
+      error: 'Quantity must be a valid non-negative integer',
+      errorLocator: 'quantityError',
+    },
+    {
+      name: 'rejects a whitespace-only title',
+      product: { ...validProductTemplate, title: '   ' },
+      error: 'Title is required',
+      errorLocator: 'titleError',
     },
   ];
 }

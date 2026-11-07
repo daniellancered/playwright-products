@@ -23,3 +23,5 @@ export type ProductValidationCase = {
   error: string;
   errorLocator: 'titleError' | 'priceError' | 'quantityError';
 };
+
+export type ProductUpdate = Partial<Product>;
